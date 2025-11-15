@@ -76,31 +76,29 @@ project/
 # Installation
 
 1. Clone this repository:
-
 ```bash
 git clone https://github.com/yourusername/loan-approval-ai
 cd loan-approval-a
----
+```
 
 Install the required packages:
 
 ```bash
 pip install -r requirements.txt
----
-
+```
 Configure your environment, including any necessary API keys (Firebase Realtime Database URL, etc.).
 
 Usage
-Run the Flask chat application:
 
+Run the Flask chat application:
 ```bash
 python app.py
----
+```
 Run the Admin Panel (Add Customer):
 
 ```bash
 python form_app.py
----
+```
 
 
 
