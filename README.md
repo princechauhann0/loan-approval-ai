@@ -1,2 +1,104 @@
-# loan-approval-ai-
-AI-powered Loan Assistant built using Flask, Firebase, and Gemini. Includes customer verification, underwriting, PDF sanction letters, and an admin panel for adding new customers.
+# 🏦 Loan AI Assistant (Flask + Firebase)
+
+An AI-powered loan assistance system built using **Flask**, **Firebase**, **Google Gemini**, and **LangChain**.  
+This project enables:
+
+- 🔹 Smart loan eligibility checking  
+- 🔹 Customer data verification (Firebase + Dummy Fallback)  
+- 🔹 Automated underwriting  
+- 🔹 PDF sanction letter generation  
+- 🔹 Admin panel for adding customer records  
+- 🔹 Chat interface with guided loan flow  
+- 🔹 Realtime chat history saved in Firebase  
+
+---
+
+## 🚀 Features
+
+### 👤 Customer Management (Admin Panel)
+- Add new customers using a clean web form.
+- Automatically stores customer data in **Firebase Realtime Database**.
+- Each customer contains:
+  - KYC details  
+  - Salary  
+  - Credit Score  
+  - Current Loan  
+  - Pre-approved Loan Limit  
+
+### 🤖 AI Chat Assistant
+The assistant follows the loan flow:
+
+1. Welcome → Ask for Customer ID  
+2. Verify customer (Firebase → Dummy fallback)  
+3. Ask for Loan Amount  
+4. Perform Underwriting  
+5. Approve or Reject loan  
+6. Auto-generate **PDF sanction letter**  
+
+### 📂 Past Chat History
+- Every conversation is stored in Firebase  
+- Future version includes Chat History UI  
+
+---
+
+## 🧱 Tech Stack
+
+| Component | Technology |
+|----------|------------|
+| Backend | Flask |
+| Database | Firebase Realtime DB |
+| AI Model | Google Gemini (via LangChain) |
+| PDF Tool | FPDF |
+| Frontend | HTML, CSS, JavaScript |
+| Deployment | Local / Render / Railway (optional) |
+
+---
+
+## 📁 Project Structure
+
+project/
+│── app.py                      # Chatbot backend
+│── form_app.py                 # Admin panel backend
+│── worker_agents.py            # Firebase + Dummy + Underwriting logic
+│── config.json                 # Firebase + API keys
+│── templates/
+│ ├── chat.html                 # Chat interface
+│ └── form.html                 # Admin panel form
+│── static/
+│ ├── chat.css 
+│ └── form.css
+│── README.md
+│── requirements.txt
+
+
+## 🔧 Setup Instructions
+
+Installation
+
+Clone this repository:
+
+git clone https://github.com/yourusername/loan-approval-ai
+cd loan-approval-ai
+
+
+Install the required packages:
+
+pip install -r requirements.txt
+
+
+Configure your environment, including any necessary API credentials for integrated services (Firebase, API keys, etc.).
+
+Usage
+
+Run the app.py file to launch the Flask chat application:
+
+python app.py
+
+
+Run the form_app.py file to open the Admin Panel:
+
+python form_app.py
+
+
+
+
