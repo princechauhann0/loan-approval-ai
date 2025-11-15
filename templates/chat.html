@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+    <style>
+        *body {
+            background: red !important;
+        }
+    </style>
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <button class="new-chat-btn" id="newChatBtn">New Chat</button>
+            <div class="chat-history" id="chatHistory">
+                <div class="history-item active">Current Conversation</div>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="main-area">
+
+            <div class="chat-header">
+                <h1>AI Assistant</h1>
+                <button class="icon-btn" id="clearBtn">Clear</button>
+            </div>
+
+            <div class="messages-container" id="messagesContainer">
+                <div class="empty-state" id="emptyState">
+                    <h2>How can I help you today?</h2>
+                </div>
+            </div>
+
+            <!-- INPUT AREA -->
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <div class="input-container">
+                        <textarea class="input-field" id="messageInput" placeholder="Message AI Assistant..."
+                            rows="1"></textarea>
+
+                        <button class="send-btn" id="sendBtn">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+
+        const messagesContainer = document.getElementById("messagesContainer");
+        const emptyState = document.getElementById("emptyState");
+        const inputField = document.getElementById("messageInput");
+        const sendBtn = document.getElementById("sendBtn");
+
+        window.onload = function () {
+            addMessage("Welcome! How can I help you today?", "assistant");
+        };
+
+        inputField.addEventListener("input", () => {
+            inputField.style.height = "24px";
+            inputField.style.height = inputField.scrollHeight + "px";
+        });
+
+        sendBtn.addEventListener("click", sendMessage);
+
+        inputField.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        function addMessage(text, sender) {
+            if (emptyState) emptyState.style.display = "none";
+
+            const group = document.createElement("div");
+            group.className = "message-group " + sender;
+
+            group.innerHTML = `
+        <div class="message-content">
+            <div class="message-label">${sender === "user" ? "You" : "AI Assistant"}</div>
+            <div class="message-text">${text}</div>
+        </div>
+    `;
+
+            messagesContainer.appendChild(group);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        let typingDiv = null;
+
+        function addTyping() {
+            typingDiv = document.createElement("div");
+            typingDiv.className = "message-group assistant";
+            typingDiv.innerHTML = `
+        <div class="message-content">
+            <div class="message-label">AI Assistant</div>
+            <div class="message-text">...</div>
+        </div>
+    `;
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function removeTyping() {
+            if (typingDiv) typingDiv.remove();
+            typingDiv = null;
+        }
+
+
+        async function sendMessage() {
+            const message = inputField.value.trim();
+            if (!message) return;
+
+            addMessage(message, "user");
+            inputField.value = "";
+            inputField.style.height = "24px";
+
+            addTyping();
+
+            try {
+                const resp = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message })
+                });
+
+                removeTyping();
+
+                const data = await resp.json();
+                addMessage(data.response, "assistant");
+
+            } catch (err) {
+                removeTyping();
+                addMessage("Server error, please try again.", "assistant");
+            }
+        }
+
+        // NEW CHAT RESET
+        document.getElementById("newChatBtn").addEventListener("click", async () => {
+            const resp = await fetch("/new_chat");
+            const data = await resp.json();
+
+            if (data.status === "reset") {
+                messagesContainer.innerHTML = "";
+                inputField.value = "";
+                inputField.style.height = "24px";
+                addMessage("Welcome! How can I help you today?", "assistant");
+            }
+        });
+
+    </script>
+
+
+</body>
+
+</html>
