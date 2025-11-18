@@ -1,7 +1,6 @@
 from fpdf import FPDF
 import requests
 
-# ----- Dummy CRM + Credit Data -----
 DUMMY_DATA = {
     "cust101": {
         "kyc": {
@@ -33,10 +32,6 @@ DUMMY_DATA = {
 
 FIREBASE_URL = "https://loan-ai-564d3-default-rtdb.firebaseio.com/customers"
 
-
-# ------------------------------------------
-# READ FROM FIREBASE
-# ------------------------------------------
 def get_from_firebase(customer_id):
     try:
         url = f"{FIREBASE_URL}/{customer_id}.json"
@@ -61,10 +56,6 @@ def get_from_firebase(customer_id):
 
     return None
 
-
-# ------------------------------------------
-# FORMAT DUMMY DATA
-# ------------------------------------------
 def build_from_dummy(c):
     return {
         "name": c["kyc"]["name"],
@@ -79,10 +70,6 @@ def build_from_dummy(c):
         "source": "dummy"
     }
 
-
-# ------------------------------------------
-# VERIFY CUSTOMER (Firebase → Dummy fallback)
-# ------------------------------------------
 def verify_customer_details(customer_id: str):
 
     # 1. Try Firebase first
@@ -97,10 +84,6 @@ def verify_customer_details(customer_id: str):
     # 3. Not found in both
     return None
 
-
-# ------------------------------------------------------------
-# UNDERWRITING (Uses Firebase + Dummy)
-# ------------------------------------------------------------
 def perform_underwriting(customer_id: str, loan_amount: int, emi: float):
 
     # Get CUSTOMER from Firebase or dummy
@@ -131,10 +114,6 @@ def perform_underwriting(customer_id: str, loan_amount: int, emi: float):
 
     return "REJECTED: EMI is more than 50% of salary."
 
-
-# ------------------------------------------------------------
-# SANCTION LETTER GENERATOR
-# ------------------------------------------------------------
 def generate_sanction_letter_pdf(customer_name: str, loan_amount: int, tenure: int) -> str:
     pdf = FPDF()
     pdf.add_page()
